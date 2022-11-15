@@ -1,0 +1,3 @@
+[submodule "Gradient-Descent-neural-network"]
+	path = Gradient-Descent-neural-network
+	url = https://github.com/cross-hello/Gradient-Descent-neural-network.git
