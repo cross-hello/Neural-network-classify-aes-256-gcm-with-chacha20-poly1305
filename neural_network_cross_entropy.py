@@ -62,7 +62,9 @@ class nn:
 
     #def THG(self, train_data_list, batch_num, learn_rate, rounds):
     #def THG(self, train_data_list, batch_num, learn_rate, epoches, validate_data_list=None):
-    def THG(self, train_data_list,validate_data_list, batch_num, learn_rate, epoches):
+    #label_list=[("AES-128",total_number)]
+    def THG(self, train_data_list,validate_data_list, batch_num, learn_rate, epoches, label_list=None):
+    #def THG(self, train_data_list,validate_data_list, batch_num, learn_rate, epoches, label_dic=None):
         #while _ in range(rounds):
 
         #while n in range(epoches):
@@ -100,7 +102,12 @@ class nn:
                 #self.baise=[a-b*learn_rate/len(x[1]) for a,b in zip(self.baise,x[1])  ]
                 self.baise=[a-b*learn_rate/len(aa) for a,b in zip(self.baise,x[1])  ]
             #print('epoch {} loss:{}%'.fomrat(n, self.validate(train_data_list)))
-            print('epoch {}\n\t\t loss:{}%'.format(self.epoch_time, self.validate(validate_data_list)))
+            result=self.validate(validate_data_list)
+            #print('epoch {}\n\t\t loss:{}%'.format(self.epoch_time, self.validate(validate_data_list)))
+            print('epoch {}\n\t\t loss:{}%'.format(self.epoch_time, result[0]))
+            if label_list!=None:
+                for a in result[1]:
+                    print('{} correct rate:{}%'.format(label_list[a][0],100*result[1][a]/label_list[a][1]))
             self.epoch_time+=1
             #print('epoch {}\n\t\t loss:{}%'.format(n, self.validate(train_data_list)))
             #print('epoch {}\n\t\t loss:{}%'.format(n, self.validate(validate_data_list)))
@@ -131,15 +138,26 @@ class nn:
         #return (cweight/len(xl), cbaise/len(yl))
         return (cweight,cbaise)
 
+    #def validate(self, data, label_list=None):
     def validate(self, data):
         n=0
+        #if label_list!=None:
+        #    dd={}
+        dd={}
         for a in data:
             x=self.forward(a[0])
-            if x.argmax()==a[1].argmax():
+            an=x.argmax()
+            #if x.argmax()==a[1].argmax():
+            if an==a[1].argmax():
                 n+=1
-        #return n/(len(data)*100)
+                #if label_list!=None:
+                if an in dd:
+                    dd[an]+=1
+                else:
+                    dd[an]=1
+        #return n/(len(dantan)*100)
         #return n*100/len(data)
-        return (1-n/len(data))*100
+        return ((1-n/len(data))*100,dd)
     def save_model(self, weight_array_name='weight.npy', baise_array_name='baise.npy'):
         #np.save(weight_array_name,self.weight)
         a=np.asanyarray(self.weight)

@@ -9,22 +9,23 @@ After  some epoches, loss  rate wander around 63%. Total only three possibility.
 ### Steps replicate
 
 ```python
-
 #generate three form data: unmodified data, AES-256-GCM 
 #encryption data, chacha20poly1305 encryption data.
 import generate_train_material as gl
 #con=gl.read_file('xray.exe')
 con=gl.generate_random_bytes_memory(3600*24*7)
-rough_train_data=gl.generate_memory(con)
+rough_train_data=gl.generate_memory(con,172)
 randoms=gl.generate_random_bytes_memory(3600*24*7)
-rough_validate_data=gl.generate_memory(randoms)
+rough_validate_data=gl.generate_memory(randoms,172)
 #feed module
 import  read_train_material as ra
 #train_data=rs.get('train')
 train_data=ra.get_memory(rough_train_data)
+train_label=ra.get_label_list()
 valida_data=ra.get_memory(rough_validate_data)
+valida_label=ra.get_label_list()
 #valida_data=ra.get('validate')
 import neural_network_cross_entropy as ne
 A=ne.nn([188,30,3])
-A.THG(train_data, valida_data, 20,1,30)
+A.THG(train_data, valida_data, 20,1,30,label_list=valida_label)
 ```

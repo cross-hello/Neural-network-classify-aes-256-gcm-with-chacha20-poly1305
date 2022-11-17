@@ -33,27 +33,38 @@ def read_file(file_name):
     f.close()
     return con
 
-def generate_memory(con):
+def generate_memory(con, length=None):
     a=0
     aes=et.encrypt('AES-256-GCM')
     cha=et.encrypt('chacha20poly1305')
+    aes128=et.encrypt('TLS-AES-128-CCM-8-SHA256')
     l=[]
-    name_flags={'0':None,'1':cha.encrypt,'2':aes.encrypt}
+    #name_flags={'0':None,'1':cha.encrypt,'2':aes.encrypt}
+    name_flags={'0':cha.encrypt,'1':aes.encrypt,'2':aes128.encrypt}
     while a<len(con):
-        i=random.randint(48,168)
+        if length==None:
+            i=random.randint(48,168)
+        else:
+            i=length
         temcon=con[a:a+i]
         for aa in name_flags:
                 l.append(memory_write(temcon,name_flags[aa],aa))
         a+=i
     return l
 
-def generate_file(con):
+#def generate_file(con):
+def generate_file(con, length=None):
     a=0
     aes=et.encrypt('AES-256-GCM')
     cha=et.encrypt('chacha20poly1305')
-    name_flags={'0':None,'1':cha.encrypt,'2':aes.encrypt}
+    aes128=et.encrypt('TLS-AES-128-CCM-8-SHA256')
+    #name_flags={'0':None,'1':cha.encrypt,'2':aes.encrypt}
+    name_flags={'0':cha.encrypt,'1':aes.encrypt,'2':aes128.encrypt}
     while a<len(con):
-        i=random.randint(48,168)
+        if length==None:
+            i=random.randint(48,168)
+        else:
+            i=length
         temcon=con[a:a+i]
         for aa in name_flags:
             file_write(dir,aa,name_flags[aa],temcon)
